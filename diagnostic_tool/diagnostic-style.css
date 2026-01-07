@@ -1,0 +1,951 @@
+/* 電力プラン診断ツールカスタムCSS */
+
+/* ==========================================================================
+   コンテナとカードデザイン
+   ========================================================================== */
+/* 診断ツール全体のラッパー要素（ID指定） */
+#diagnostic-tool {
+  /* --- 変数定義 --- */
+  /* カードの内側余白を画面幅に応じて可変にする (最小1.5rem, 推奨4vw, 最大2.5rem) */
+  --diag-card-padding: clamp(1.5rem, 4vw, 2.5rem);
+
+  /* --- レイアウトとサイズ --- */
+  margin-left: auto; /* 左マージンを自動設定（中央揃え） */
+  margin-right: auto; /* 右マージンを自動設定（中央揃え） */
+  width: 100%; /* 幅を親要素に対して100%に設定 */
+  max-width: 960px; /* コンテンツの最大幅を960pxに制限 */
+
+  /* --- 見た目 --- */
+  background-color: #ffffff; /* 背景色を白(#ffffff)に設定 */
+  border-radius: 12px; /* 枠の四隅を12pxの半径で丸める */
+  /* カード全体に影をつけて浮き上がりを表現 */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* --- 余白 --- */
+  padding: var(--diag-card-padding); /* 変数で定義した内側余白を適用 */
+
+  /* --- 文字色（全体） --- */
+  /* 基本文字色を濃いグレー(#3e3a39)に設定（子要素へ継承） */
+  color: #3e3a39;
+
+  /* --- ボックスモデル --- */
+  box-sizing: border-box; /* paddingとborderを要素のサイズに含める */
+  overflow: hidden; /* 枠からはみ出した子要素を隠す */
+  
+  /* --- フォントリセット --- */
+  /* 日本語フォント(Noto Sans JP)やシステムフォントを優先順に指定 */
+  font-family: 'Noto Sans JP', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5; /* 行の高さを1.5倍に設定 */
+}
+
+/* ツール内の全要素に対して box-sizing を強制 */
+#diagnostic-tool * {
+  box-sizing: border-box; /* レイアウト崩れを防ぐため全要素に適用 */
+}
+
+/* ==========================================================================
+   テキストスタイル (Fluid Typography)
+   ========================================================================== */
+/* テキスト中央揃え用クラス */
+#diagnostic-tool .diag-text-center {
+  text-align: center; /* テキストを中央に配置 */
+}
+
+/* --------------------------------------------------------------------------
+   見出しボックス (全幅表示)
+   -------------------------------------------------------------------------- */
+/* ツール上部のメインヘッダーエリア */
+#diagnostic-tool .diag-main-header-box {
+  background-color: var(--color_deep04); /* 背景色を強調カラーに設定 */
+
+  /* ネガティブマージンで親コンテナのpaddingを相殺し、全幅に広げる */
+  margin-top: calc(var(--diag-card-padding) * -1); /* 上方向へ拡張 */
+  margin-left: calc(var(--diag-card-padding) * -1); /* 左方向へ拡張 */
+  margin-right: calc(var(--diag-card-padding) * -1); /* 右方向へ拡張 */
+  width: calc(100% + var(--diag-card-padding) * 2); /* 幅を拡張分加算して設定 */
+
+  padding: 1rem var(--diag-card-padding); /* 上下1rem、左右は親と同じ余白を設定 */
+  border-radius: 12px 12px 0 0; /* 上部左右のみ角丸にする */
+  margin-bottom: 1rem; /* 下要素との間隔 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* 下方向に軽い影 */
+}
+
+/* ヘッダー内キャッチコピー */
+#diagnostic-tool .diag-header-catch {
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem); /* 文字サイズを可変に設定 */
+  font-weight: 700; /* 太字 */
+  line-height: 1.5; /* 行間 */
+  margin-bottom: 0.5rem; /* 下マージン */
+  opacity: 0.9; /* 不透明度90% */
+  color: #ffffff; /* 白文字 */
+}
+
+/* ヘッダー内メインタイトル */
+#diagnostic-tool .diag-header-main {
+  font-size: clamp(1.25rem, 5vw, 1.75rem); /* 文字サイズを大きく可変に設定 */
+  font-weight: 700; /* 太字 */
+  margin-bottom: 0; /* マージンなし */
+  line-height: 1.2; /* 行間を狭く */
+  color: #ffffff; /* 白文字 */
+}
+
+/* 結果画面用ヘッダータイトル */
+#diagnostic-tool .diag-header-box-title {
+  font-size: 1.5rem; /* 固定サイズ */
+  font-weight: 700; /* 太字 */
+  margin: 0; /* マージンなし */
+  color: #ffffff; /* 白文字 */
+}
+
+/* サブヘッダー（予備） */
+#diagnostic-tool .diag-header-sub {
+  font-size: clamp(0.9rem, 3vw, 1.125rem); /* 文字サイズ可変 */
+  color: rgba(255, 255, 255, 0.9); /* 白の透過文字 */
+}
+
+/* 質問文スタイル */
+#diagnostic-tool .diag-question {
+  font-size: clamp(1rem, 4vw, 1.25rem); /* 文字サイズ可変 */
+  font-weight: 600; /* 中太字 */
+  color: #1f2937; /* ダークグレー */
+  margin-bottom: 1rem; /* 下マージン */
+  text-align: center; /* 中央揃え */
+}
+
+/* 質問グループラッパー */
+#diagnostic-tool .diag-question-group {
+  margin-bottom: 1.5rem; /* 下マージン */
+  scroll-margin-top: 2rem; /* スクロール時の上部余白確保 */
+}
+
+/* ==========================================================================
+   アニメーション
+   ========================================================================== */
+/* 画面遷移アニメーション定義 */
+#diagnostic-tool .diagnostic-screen {
+  display: none; /* 初期状態は非表示 */
+  animation: fadeIn 0.5s ease-in-out; /* 0.5秒のフェードイン */
+}
+/* アクティブ画面表示 */
+#diagnostic-tool .diagnostic-screen.active {
+  display: block; /* 表示状態 */
+}
+/* フェードインキーフレーム */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); } /* 透明かつ少し下から */
+  to { opacity: 1; transform: translateY(0); } /* 不透明かつ定位置へ */
+}
+
+/* ==========================================================================
+   グリッドレイアウト
+   ========================================================================== */
+/* 地域選択ボタンのグリッド */
+#diagnostic-tool .diag-grid-regions {
+  display: grid; /* グリッドレイアウト */
+  grid-template-columns: repeat(3, 1fr); /* 3列等幅 */
+  gap: clamp(0.5rem, 2vw, 1rem); /* 間隔可変 */
+  margin-bottom: 1rem; /* 下マージン */
+}
+/* 最後の要素（沖縄）の配置調整（スマホ） */
+#diagnostic-tool .diag-grid-regions > .choice-button:last-child {
+  grid-column: 2; /* 2列目に配置（中央寄せ風） */
+}
+/* タブレット・PC以上のグリッド調整 */
+@media (min-width: 768px) {
+  #diagnostic-tool .diag-grid-regions {
+    grid-template-columns: repeat(5, 1fr); /* 5列等幅に変更 */
+  }
+  #diagnostic-tool .diag-grid-regions > .choice-button:last-child {
+    grid-column: auto; /* 自動配置に戻す */
+  }
+}
+
+/* 人数選択ボタンのグリッド */
+#diagnostic-tool .diag-grid-households {
+  display: grid; /* グリッドレイアウト */
+  grid-template-columns: repeat(4, 1fr); /* 4列等幅（スマホでも1行） */
+  gap: clamp(0.5rem, 2vw, 1rem); /* 間隔可変 */
+}
+
+/* ==========================================================================
+   ボタン共通スタイル
+   ========================================================================== */
+/* 選択肢ボタン基本スタイル */
+#diagnostic-tool .choice-button {
+  background-color: #ffffff; /* 背景白 */
+  border: 2px solid #d1d5db; /* 枠線グレー */
+  color: inherit; /* 文字色継承 */
+  font-weight: 600; /* 中太字 */
+  border-radius: 0.5rem; /* 角丸 */
+  padding: clamp(0.75rem, 2vw, 1rem) 0.25rem; /* パディング可変 */
+  cursor: pointer; /* ポインターカーソル */
+  width: 100%; /* 幅100% */
+  transition: all 0.2s ease; /* トランジション */
+  font-family: inherit; /* フォント継承 */
+  font-size: clamp(0.85rem, 2.5vw, 1rem); /* 文字サイズ可変 */
+  line-height: inherit; /* 行高継承 */
+}
+/* ホバー時 */
+#diagnostic-tool .choice-button:hover {
+  transform: translateY(-2px); /* 浮き上がり */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 影 */
+  border-color: #9ca3af; /* 枠線色濃く */
+}
+/* 選択時 */
+#diagnostic-tool .choice-button.selected {
+  background-color: var(--color_main); /* 背景メインカラー */
+  color: white; /* 白文字 */
+  border-color: var(--color_main); /* 枠線メインカラー */
+}
+
+/* 人数選択ボタン調整 */
+#diagnostic-tool .btn-household {
+  padding: clamp(0.75rem, 2vw, 1.2rem) 0.5rem; /* パディング調整 */
+  font-size: clamp(0.9rem, 3vw, 1.1rem); /* 文字サイズ調整 */
+}
+
+/* 「前に戻る」ボタン */
+#diagnostic-tool .diag-btn-prev {
+  display: block; /* ブロック表示 */
+  width: 100%; /* 幅100% */
+  background: transparent; /* 背景透明 */
+  border: none; /* 枠線なし */
+  font-weight: 500; /* 文字太さ調整 */
+  padding: 0.5rem 1rem; /* パディング */
+  margin-top: 1.5rem; /* 上マージン */
+  cursor: pointer; /* ポインターカーソル */
+  text-decoration: underline; /* 下線 */
+  transition: color 0.3s; /* 色変化アニメーション */
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem); /* 文字サイズ */
+  color: inherit; /* 色継承 */
+}
+/* ホバー時 */
+#diagnostic-tool .diag-btn-prev:hover {
+  color: #1f2937; /* 色変更 */
+}
+
+/* 「もう一度診断する」ボタン */
+#diagnostic-tool .diag-btn-restart {
+  display: block; /* ブロック表示 */
+  width: 100%; /* 幅100% */
+  background-color: #6b7280; /* 背景グレー */
+  color: white; /* 白文字 */
+  font-weight: 700; /* 太字 */
+  padding: 1rem 1.5rem; /* パディング */
+  border-radius: 0.5rem; /* 角丸 */
+  border: none; /* 枠線なし */
+  font-size: clamp(1rem, 3vw, 1.125rem); /* 文字サイズ */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* 影 */
+  cursor: pointer; /* ポインターカーソル */
+  transition: background-color 0.3s; /* 背景色アニメーション */
+}
+/* ホバー時 */
+#diagnostic-tool .diag-btn-restart:hover {
+  background-color: #4b5563; /* 背景色濃く */
+}
+
+/* ==========================================================================
+   ローディングスピナー
+   ========================================================================== */
+/* スピナーデザイン */
+#diagnostic-tool .diagnostic-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1); /* ベース枠線 */
+  border-left-color: var(--color_main); /* 回転部分の色 */
+  border-radius: 50%; /* 円形 */
+  width: 40px; /* 幅 */
+  height: 40px; /* 高さ */
+  animation: spin 1s linear infinite; /* 回転アニメーション */
+  margin: 0 auto; /* 中央配置 */
+}
+/* 回転キーフレーム */
+@keyframes spin {
+  to { transform: rotate(360deg); } /* 360度回転 */
+}
+
+/* ローダーエリア初期状態 */
+#diagnostic-tool #result-loader {
+  display: none; /* 非表示 */
+}
+/* ローディング中表示 */
+#diagnostic-tool #result-loader.loading {
+  display: flex; /* フレックス表示 */
+  justify-content: center; /* 中央揃え */
+  align-items: center; /* 垂直中央 */
+  padding: 2.5rem 0; /* 余白 */
+}
+
+/* ==========================================================================
+   結果表示エリア
+   ========================================================================== */
+/* 結果コンテンツラッパー */
+#diagnostic-tool #result-content {
+  text-align: left; /* 左揃え */
+  margin-bottom: 2rem; /* 下マージン */
+  min-height: 150px; /* 最小高さ確保 */
+}
+
+/* --- 共通ユーティリティ --- */
+#diagnostic-tool .diag-center { text-align: center; margin-left: auto; margin-right: auto; } /* 中央配置 */
+#diagnostic-tool .diag-center img { margin: 0 auto !important; display: inline-block; } /* 画像中央配置 */
+#diagnostic-tool .diag-mb-s { margin-bottom: 0.5rem; } /* 小マージン */
+#diagnostic-tool .diag-mb-m { margin-bottom: 1.5rem; } /* 中マージン */
+#diagnostic-tool .diag-mb-l { margin-bottom: 2.5rem; } /* 大マージン */
+#diagnostic-tool .diag-bold { font-weight: bold; } /* 太字 */
+#diagnostic-tool .diag-text-l { font-size: 1.25rem; } /* 大文字 */
+#diagnostic-tool .diag-text-xl { font-size: 1.5rem; } /* 特大文字 */
+#diagnostic-tool .diag-red { color: #d32f2f; } /* 赤文字 */
+#diagnostic-tool .diag-gray-text { color: #888; font-size: 0.85rem; } /* グレー小文字 */
+
+/* --- リンクテキスト --- */
+/* 通常リンクスタイル */
+#diagnostic-tool #result-content a:not(.swell-block-button__link) {
+  color: #1176d4; /* 青リンク */
+  text-decoration: underline; /* 下線 */
+}
+/* リンクホバー時 */
+#diagnostic-tool #result-content a:not(.swell-block-button__link):hover {
+  text-decoration: none; /* 下線なし */
+  opacity: 0.8; /* 透過 */
+}
+/* ロゴ画像リンク */
+#diagnostic-tool .diag-logo-wrap a {
+  text-decoration: none !important; /* 下線強制なし */
+  border: none !important; /* 枠線強制なし */
+}
+
+/* おすすめメッセージ */
+#diagnostic-tool .diag-recommend-msg {
+  margin-bottom: 0.5rem; /* 下マージン */
+}
+
+/* 公式サイトリンクコンテナ */
+#diagnostic-tool .diag-official-link-wrap {
+  font-size: 0.9rem; /* 文字サイズ */
+  text-align: center; /* 中央揃え */
+}
+
+/* ==========================================================================
+   レイアウト設定
+   ========================================================================== */
+/* 縦並びレイアウト */
+#diagnostic-tool .diag-layout-vertical {
+  display: flex; /* フレックスボックス */
+  flex-direction: column; /* 縦方向 */
+  gap: 2.5rem; /* 間隔 */
+}
+
+/* 2カラムグリッド */
+#diagnostic-tool .diag-grid-2col {
+  display: flex; /* デフォルトは縦並び */
+  flex-direction: column; /* 縦方向 */
+  gap: 1.5rem; /* 間隔 */
+}
+/* PC以上で2列グリッド化 */
+@media (min-width: 768px) {
+  #diagnostic-tool .diag-grid-2col {
+    display: grid; /* グリッド */
+    grid-template-columns: 1fr 1fr; /* 1:1分割 */
+    align-items: start; /* 上揃え */
+    /* ★修正: 2位カラムの縦方向の間隔を詰める */
+    column-gap: 2.5rem;
+    row-gap: 1rem; /* 1.5rem -> 1rem */
+  }
+}
+
+/* 2位エリアボタン全幅設定（PCのみ） */
+@media (min-width: 768px) {
+  #diagnostic-tool .diag-second-rank-area .diag-grid-2col > .diag-application-btn-area {
+    grid-column: 1 / -1; /* 全幅配置 */
+    margin-top: 1rem; /* 上マージン */
+    width: 100%; /* 幅100% */
+  }
+  
+  /* ボタン要素の幅強制拡大 */
+  #diagnostic-tool .diag-application-btn-area .swell-block-button {
+      width: 100%; /* 幅100% */
+      max-width: 100%; /* 最大幅解除 */
+  }
+  /* ボタン内リンク調整 */
+  #diagnostic-tool .diag-application-btn-area .swell-block-button__link {
+      width: 100%; /* 幅100% */
+      justify-content: center; /* 中央揃え */
+  }
+}
+
+/* 右カラムラッパー */
+#diagnostic-tool .diag-right-column {
+  display: flex; /* フレックスボックス */
+  flex-direction: column; /* 縦方向 */
+  gap: 2.5rem; /* 間隔 */
+}
+
+/* ==========================================================================
+   各セクションのデザイン
+   ========================================================================== */
+/* 見出し共通スタイル */
+#diagnostic-tool .diag-section-title,
+#diagnostic-tool .diag-features-header,
+#diagnostic-tool .diag-sec-features-title,
+#diagnostic-tool .diag-campaign-title,
+#diagnostic-tool .diag-price-summary-title {
+  display: block; /* ブロック要素 */
+  background-color: transparent; /* 背景透明 */
+  font-weight: bold; /* 太字 */
+  font-size: 1.3rem; /* 文字サイズ */
+  padding: 0 0 0.5rem 0; /* パディング */
+  margin-bottom: 1rem; /* マージン */
+  text-align: left; /* 左揃え */
+  line-height: 1.4; /* 行間 */
+  border-bottom: 2px solid; /* 下線 */
+}
+
+/* 特徴ヘッダー色設定 */
+#diagnostic-tool .diag-features-header,
+#diagnostic-tool .diag-sec-features-title {
+  color: var(--color_main); /* メインカラー */
+  border-bottom-color: var(--color_main); /* 下線色 */
+}
+
+/* キャンペーン・料金見出し色設定 */
+#diagnostic-tool .diag-campaign-title,
+#diagnostic-tool .diag-price-summary-title {
+  color: #eac100; /* 黄色系 */
+  border-bottom-color: #eac100; /* 下線色 */
+}
+
+/* 料金見出しサイズ調整 */
+#diagnostic-tool .diag-price-summary-title {
+  font-size: 1.1rem; /* サイズ縮小 */
+}
+
+/* --- 特徴リスト --- */
+/* リストボックス */
+#diagnostic-tool .diag-features-box {
+  border: none; /* 枠線なし */
+  background: transparent !important; /* 背景透明 */
+  padding: 0; /* パディングなし */
+  display: block; /* ブロック */
+}
+
+/* リスト(ul)スタイル */
+#diagnostic-tool .diag-features-box ul.diag-features-list,
+#diagnostic-tool ul.diag-sec-features-list {
+  display: block !important; /* ブロック */
+  list-style: none !important; /* マーカーなし */
+  margin: 0 !important; /* マージンリセット */
+  padding: 0 !important; /* パディングリセット */
+  background: transparent !important; /* 背景透明 */
+  border-radius: 0 !important; /* 角丸なし */
+  border: none !important; /* 枠線なし */
+  box-shadow: none !important; /* 影なし */
+  max-width: 100%; /* 幅制限なし */
+  text-align: left; /* 左揃え */
+}
+
+/* リスト項目(li)スタイル */
+#diagnostic-tool .diag-features-box ul.diag-features-list li,
+#diagnostic-tool ul.diag-sec-features-list li {
+  background: transparent !important; /* 背景透明 */
+  border: none !important; /* 枠線なし */
+  box-shadow: none !important; /* 影なし */
+  margin: 0 0 0.5rem 0 !important; /* 下マージン */
+  padding: 0 0 0.5rem 0 !important; /* 下パディング */
+  padding-left: 0 !important; /* 左パディングなし */
+  margin-left: 0 !important; /* 左マージンなし */
+  text-align: left; /* 左揃え */
+  line-height: 1.6; /* 行間 */
+  border-bottom: 1px dashed #ccc !important; /* 破線下線 */
+  list-style: none !important; /* マーカーなし */
+  position: relative; /* ポジション */
+}
+
+/* 最終項目のスタイル調整 */
+#diagnostic-tool .diag-features-box ul.diag-features-list li:last-child,
+#diagnostic-tool ul.diag-sec-features-list li:last-child {
+  margin-bottom: 0 !important; /* マージンなし */
+  border-bottom: none !important; /* 下線なし */
+}
+
+/* 擬似要素無効化 */
+#diagnostic-tool .diag-features-box ul.diag-features-list li::before,
+#diagnostic-tool ul.diag-sec-features-list li::before {
+  content: none !important; /* 内容なし */
+  display: none !important; /* 非表示 */
+}
+
+
+/* --- 2位用エリア (背景色グラデーション) --- */
+#diagnostic-tool .diag-second-rank-area {
+  /* 背景グラデーション */
+  background: linear-gradient(
+    to bottom, /* 上から下 */
+    #ffffff 0%, /* 開始色 */
+    color-mix(in srgb,  var(--color_deep04), #fff 90%) 20%, /* 中間色 */
+    color-mix(in srgb,  var(--color_deep04), #fff 80%) 100% /* 終了色 */
+  );
+  
+  border-radius: 12px; /* 角丸 */
+  padding: 2rem var(--diag-card-padding); /* 左右パディングを1位と統一 */
+  margin-top: 3rem; /* 上マージン */
+  
+  /* ネガティブマージンで全幅化 */
+  margin-left: calc(var(--diag-card-padding) * -1);
+  margin-right: calc(var(--diag-card-padding) * -1);
+  width: calc(100% + var(--diag-card-padding) * 2);
+  
+  /* 下部結合用スタイル */
+  border-radius: 0; /* 角丸なし */
+  margin-bottom: 0; /* 下マージンなし */
+
+  padding-top: 1.5rem; /* 上パディング */
+  padding-bottom: 3.5rem; /* 下パディング（アコーディオンとの調整） */
+}
+
+/* 2位エリアの料金セクションカード */
+#diagnostic-tool .diag-second-rank-area .diag-price-section {
+  background-color: #ffffff; /* 背景白 */
+  border-radius: 0; /* 角丸なし（角張らせる） */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* 影 */
+  overflow: hidden; /* はみ出し防止 */
+  /* ★修正: マージンを0にして、直下の注釈との隙間をなくす */
+  margin-bottom: 0 !important;
+  padding: 0; /* パディングなし */
+  border: none; /* 枠線なし */
+}
+
+/* 2位エリアの旧見出し（非表示） */
+#diagnostic-tool .diag-second-rank-area .diag-price-summary-title {
+  display: none; /* 非表示 */
+}
+
+/* 2位エリアの料金表ボックス */
+#diagnostic-tool .diag-second-rank-area .diag-price-summary-box {
+  background-color: #ffffff; /* 背景白 */
+  border: 1px solid var(--color_main); /* 枠線 */
+  border-radius: 0; /* 角丸なし */
+  box-shadow: none; /* 影なし */
+  width: 100%; /* 幅100% */
+  margin: 0; /* ★修正: 下マージンを0にする（元は 0 0 1rem 0） */
+}
+
+/* 2位エリアのロゴ・ボタンエリアスタイルリセット */
+#diagnostic-tool .diag-second-rank-area .diag-sec-logo,
+#diagnostic-tool .diag-second-rank-area .diag-application-btn-area {
+  background-color: transparent; /* 背景透明 */
+  border-radius: 0; /* 角丸なし */
+  box-shadow: none; /* 影なし */
+  padding: 0; /* パディングなし */
+  margin-bottom: 2rem; /* 下マージン */
+}
+
+/* 2位エリアの特徴ボックス */
+#diagnostic-tool .diag-second-rank-area .diag-sec-features {
+  background-color: #ffffff; /* 背景白 */
+  border-radius: 12px; /* 角丸 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* 影 */
+  padding: 1.5rem; /* パディング */
+  margin-bottom: 2rem; /* 下マージン */
+}
+
+/* 2位エリアの特徴リストリセット */
+#diagnostic-tool .diag-second-rank-area .diag-sec-features-list {
+  background-color: transparent; /* 背景透明 */
+  border-radius: 0; /* 角丸なし */
+  box-shadow: none; /* 影なし */
+  padding: 0 !important; /* パディングなし */
+  margin-bottom: 0; /* マージンなし */
+}
+
+/* 2位ロゴエリア */
+#diagnostic-tool .diag-sec-logo {
+  text-align: center; /* 中央揃え */
+}
+/* 2位キャッチコピー */
+#diagnostic-tool .diag-sec-catch {
+  font-size: 0.85rem; /* 文字サイズ */
+  font-weight: bold; /* 太字 */
+  margin-bottom: 0.5rem; /* 下マージン */
+  display: inline-block; /* インラインブロック */
+}
+/* 2位ロゴ画像 */
+#diagnostic-tool .diag-sec-logo img {
+  max-width: 220px; /* 最大幅 */
+  width: 100%; /* 幅100% */
+  height: auto; /* 高さ自動 */
+}
+
+/* --- 金額シミュレーション表示エリア（共通） --- */
+#diagnostic-tool .diag-price-summary-box {
+  background-color: #ffffff; /* 背景白 */
+  border: 1px solid var(--color_main); /* 枠線 */
+  border-radius: 0; /* 角丸なし（角張らせる） */
+  overflow: hidden; /* はみ出し防止 */
+  padding: 0; /* パディングなし */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* 影 */
+  margin-bottom: 0; /* ★修正: 注釈との間隔を詰めるため0に変更 */
+  display: flex; /* フレックス */
+  flex-direction: column; /* 縦方向 */
+}
+
+/* ボックス内タイトル行デザイン */
+#diagnostic-tool .diag-price-box-title {
+  background-color: var(--color_main); /* 背景メインカラー */
+  color: #ffffff; /* 文字色白 */
+  padding: 0.8rem; /* パディング */
+  text-align: center; /* 中央揃え */
+  font-weight: bold; /* 太字 */
+  font-size: 1.1rem; /* 文字サイズ */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5); /* 下線 */
+  border-radius: 0; /* 角丸なし */
+}
+/* タイトル内注釈 */
+#diagnostic-tool .diag-price-box-title .diag-price-condition-note {
+  font-weight: normal; /* 太字解除 */
+  font-size: 0.7em; /* 文字サイズ */
+  margin-top: 0.3em; /* 上マージン */
+  display: block; /* ブロック */
+  color: inherit; /* 色継承 */
+}
+
+/* 料金表ヘッダー */
+#diagnostic-tool .diag-price-header {
+  display: flex; /* フレックス */
+  background-color: #ffffff; /* 背景白 */
+  color: var(--color_main); /* 文字色メインカラー */
+  border-bottom: 1px solid  var(--color_main); /* 下線 */
+  font-weight: 700; /* 太字 */
+  font-size: 1rem; /* 文字サイズ */
+}
+/* ヘッダーカラム */
+#diagnostic-tool .diag-price-header-col {
+  flex: 1; /* 等幅 */
+  text-align: center; /* 中央揃え */
+  padding: 0.15rem 0.15rem; /* パディング */
+}
+/* ヘッダー区切り線 */
+#diagnostic-tool .diag-price-header-col:last-child {
+  border-left: 1px solid  var(--color_main); /* 左線 */
+}
+
+/* 料金表データ行 */
+#diagnostic-tool .diag-price-body {
+  display: flex; /* フレックス */
+  background-color: transparent; /* 背景透明 */
+}
+
+/* 料金表カラム */
+#diagnostic-tool .diag-price-col {
+  flex: 1; /* 等幅 */
+  text-align: center; /* 中央揃え */
+  padding: 1rem 0.5rem; /* パディング */
+  display: flex; /* フレックス */
+  flex-direction: column; /* 縦方向 */
+  justify-content: center; /* 中央配置 */
+}
+
+/* 右カラム区切り線 */
+#diagnostic-tool .diag-price-col:last-child {
+  border-left: 1px solid var(--color_main); /* 左線 */
+}
+
+/* メイン金額表示 */
+#diagnostic-tool .diag-price-row-main .diag-price-val {
+  font-size: 1.4rem; /* 文字サイズ */
+  font-weight: bold; /* 太字 */
+  color: #d32f2f; /* 赤文字 */
+}
+/* 金額数値拡大 */
+#diagnostic-tool .diag-price-row-main .diag-price-val span {
+  font-size: 1.8rem; /* 文字サイズ拡大 */
+}
+
+/* サブ情報表示 */
+#diagnostic-tool .diag-price-row-sub {
+  font-size: 0.9rem; /* 文字サイズ */
+  margin-top: 0.3rem; /* 上マージン */
+  line-height: 1.4; /* 行間 */
+  color: #333; /* 黒文字 */
+}
+
+/* ラベルスタイル */
+#diagnostic-tool .diag-price-label-black {
+  color: #333; /* 黒文字 */
+  font-weight: bold; /* 太字 */
+  font-size: 1rem; /* 文字サイズ */
+}
+
+/* 差額数値スタイル */
+#diagnostic-tool .diag-price-diff-val {
+  color: #d32f2f; /* 赤文字 */
+  font-weight: bold; /* 太字 */
+  font-size: 1.8rem; /* 文字サイズ拡大 */
+}
+
+/* 注釈スタイル */
+#diagnostic-tool .diag-price-condition-note {
+  font-weight: normal; /* 太字解除 */
+  font-size: 0.7em; /* 文字サイズ縮小 */
+  margin-top: 0.3em; /* 上マージン */
+  display: block; /* ブロック */
+  color: inherit; /* 色継承 */
+}
+
+/* ターゲットラベル */
+#diagnostic-tool .diag-price-target-label {
+  font-size: 0.9rem; /* 文字サイズ */
+  font-weight: normal; /* 太字解除 */
+  margin-bottom: 0.5rem; /* 下マージン */
+  display: block; /* ブロック */
+}
+
+/* 点線区切り（非表示） */
+#diagnostic-tool .diag-dashed-divider {
+  border: 0; /* 枠なし */
+  border-top: 1px dashed #ddd; /* 上破線 */
+  height: 0; /* 高さ0 */
+  display: none; /* 非表示 */
+  margin: 0; /* マージンなし */
+}
+
+
+/* --- キャンペーンボックス --- */
+#diagnostic-tool .diag-campaign-box {
+  border: none; /* 枠線なし */
+  padding: 0; /* パディングなし */
+  text-align: left; /* 左揃え */
+  position: relative; /* ポジション */
+  background: transparent; /* 背景透明 */
+  display: block; /* ブロック */
+  margin-bottom: 1rem; /* 下マージン */
+}
+
+/* キャッチコピーラッパー */
+#diagnostic-tool .diag-catch-copy-wrap {
+  text-align: center; /* 中央揃え */
+  font-size: 1rem; /* 文字サイズ */
+  margin-bottom: 0.5rem; /* 下マージン */
+}
+/* SWELLフォーマット */
+#diagnostic-tool .diag-catch-copy-wrap .swl-format-1 {
+  display: inline-block; /* インラインブロック */
+}
+
+/* 旧キャッチコピー（互換性） */
+#diagnostic-tool .diag-btn-catch {
+  font-weight: bold; /* 太字 */
+  font-size: 1rem; /* 文字サイズ */
+  text-align: center; /* 中央揃え */
+  margin-bottom: 0.8rem; /* 下マージン */
+}
+
+/* ==========================================================================
+   アコーディオン (詳細条件)
+   ========================================================================== */
+/* アコーディオン全体 */
+#diagnostic-tool .diag-accordion {
+  border-top: 1px solid #ddd; /* 上線 */
+  margin-top: 3rem; /* 上マージン */
+  text-align: left; /* 左揃え */
+  
+  /* ネガティブマージンで全幅化 */
+  margin-left: calc(var(--diag-card-padding) * -1);
+  margin-right: calc(var(--diag-card-padding) * -1);
+  margin-bottom: calc(var(--diag-card-padding) * -1);
+  width: calc(100% + var(--diag-card-padding) * 2);
+  
+  /* 上部角丸 */
+  border-radius: 12px 12px 0 0;
+  overflow: hidden; /* はみ出し防止 */
+}
+
+/* 通常配置時のマージン */
+#diagnostic-tool #diagnostic-tool .diag-layout-vertical + .diag-accordion {
+  margin-top: 3rem; /* 上マージン */
+  border-top: 1px solid #ddd; /* 上線 */
+}
+
+/* 2位エリア直下の配置（結合） */
+#diagnostic-tool .diag-second-rank-area + .diag-accordion {
+  margin-top: -1.5rem; /* 食い込ませる */
+  border-top: none; /* 上線なし */
+  position: relative; /* ポジション */
+  z-index: 1; /* 前面に */
+}
+
+/* アコーディオンヘッダー */
+#diagnostic-tool .diag-accordion summary {
+  padding: 1rem var(--diag-card-padding); /* パディング */
+  cursor: pointer; /* ポインター */
+  font-size: 0.8rem; /* 文字サイズ */
+  background-color: #e5e5e5 !important; /* 背景グレー */
+  list-style: none; /* リストスタイルなし */
+  display: flex; /* フレックス */
+  justify-content: space-between; /* 両端揃え */
+  align-items: center; /* 垂直中央 */
+  border-bottom: none; /* 下線なし */
+}
+/* マーカー削除 */
+#diagnostic-tool .diag-accordion summary::-webkit-details-marker { display: none; }
+/* 閉アイコン */
+#diagnostic-tool .diag-accordion summary::after { content: '▼'; font-size: 0.8rem; }
+/* 開アイコン */
+#diagnostic-tool .diag-accordion[open] summary::after { content: '▲'; }
+
+/* アコーディオン中身 */
+#diagnostic-tool .diag-accordion-content {
+  padding: 1.5rem var(--diag-card-padding); /* パディング */
+  background: #f9f9f9; /* 背景薄グレー */
+  font-size: 0.85rem; /* 文字サイズ */
+  border-top: none; /* 上線なし */
+}
+/* 中身リスト */
+#diagnostic-tool .diag-accordion-content ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+/* リスト項目 */
+#diagnostic-tool .diag-accordion-content li { margin-bottom: 0.5rem; list-style-type: disc; }
+
+/* 図表スタイル */
+#diagnostic-tool .diag-accordion-figure {
+  margin: 1.5rem 0; /* 上下マージン */
+  text-align: center; /* 中央揃え */
+  margin-left: auto; /* 左自動 */
+  margin-right: auto; /* 右自動 */
+}
+/* キャプション */
+#diagnostic-tool .diag-accordion-caption {
+  font-size: 0.75rem; /* 文字サイズ */
+  text-align: left; /* 左揃え */
+  color: #666; /* グレー文字 */
+  margin-top: 5px; /* 上マージン */
+}
+
+/* テーブルスタイル */
+#diagnostic-tool .diag-accordion-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 1rem; }
+/* セル共通 */
+#diagnostic-tool .diag-accordion-table th, 
+#diagnostic-tool .diag-accordion-table td {
+  border: 1px solid #ccc; /* 枠線 */
+  padding: 0.5rem; /* パディング */
+  vertical-align: middle; /* 垂直中央 */
+  text-align: center; /* 中央揃え */
+}
+/* 行見出し */
+#diagnostic-tool .diag-accordion-table tbody th { background: #C7C7C726; }
+/* ヘッダーセル */
+#diagnostic-tool .diag-accordion-table thead th { 
+  background: var(--color_main); /* 背景メインカラー */
+  color: #ffffff; /* 白文字 */
+}
+/* データセル */
+#diagnostic-tool .diag-accordion-table td { background: white; }
+
+/* ==========================================================================
+   吹き出しデザイン
+   ========================================================================== */
+/* 吹き出しラッパー */
+#diagnostic-tool .diag-speech-wrap {
+  display: flex; /* フレックス */
+  align-items: flex-start; /* 上揃え */
+  gap: 1rem; /* 間隔 */
+  margin-bottom: 1rem; /* 下マージン */
+  flex-direction: row; /* 横並び */
+}
+
+/* 吹き出し本体 */
+#diagnostic-tool .diag-speech-bubble {
+  position: relative; /* ポジション */
+  background: #fff; /* 背景白 */
+  border: 2px solid var(--color_deep04); /* 枠線 */
+  border-radius: 8px; /* 角丸 */
+  padding: 1.25rem; /* パディング */
+  flex: 1; /* 伸長 */
+  font-size: 0.95rem; /* 文字サイズ */
+  line-height: 1.6; /* 行間 */
+}
+
+/* しっぽ共通設定 */
+#diagnostic-tool .diag-speech-bubble::after, 
+#diagnostic-tool .diag-speech-bubble::before {
+  left: 100%; /* 右端配置 */
+  top: 20px; /* 上位置 */
+  border: solid transparent; /* 透明ボーダー */
+  content: " "; /* 空コンテンツ */
+  height: 0; /* 高さ0 */
+  width: 0; /* 幅0 */
+  position: absolute; /* 絶対位置 */
+  pointer-events: none; /* 透過 */
+}
+/* 内側しっぽ（白） */
+#diagnostic-tool .diag-speech-bubble::after {
+  border-color: transparent; /* 透明 */
+  border-left-color: #fff; /* 左だけ白 */
+  border-width: 10px; /* サイズ */
+  margin-top: -10px; /* 位置補正 */
+}
+/* 外側しっぽ（線） */
+#diagnostic-tool .diag-speech-bubble::before {
+  border-color: transparent; /* 透明 */
+  border-left-color: var(--color_deep04); /* 左だけ色 */
+  border-width: 13px; /* サイズ */
+  margin-top: -13px; /* 位置補正 */
+}
+
+/* 人物エリア */
+#diagnostic-tool .diag-speech-person {
+  display: flex; /* フレックス */
+  flex-direction: column; /* 縦並び */
+  align-items: center; /* 中央揃え */
+  width: 80px; /* 固定幅 */
+  flex-shrink: 0; /* 縮小禁止 */
+}
+/* アイコン枠 */
+#diagnostic-tool .diag-speech-icon {
+  width: 60px; /* 幅 */
+  height: 60px; /* 高さ */
+  border-radius: 50%; /* 円形 */
+  overflow: hidden; /* はみ出し防止 */
+  margin-bottom: 0.5rem; /* 下マージン */
+  border: 2px solid #eee; /* 薄枠線 */
+}
+/* アイコン画像 */
+#diagnostic-tool .diag-speech-icon img {
+  width: 100%; /* 幅100% */
+  height: 100%; /* 高さ100% */
+  object-fit: cover; /* カバー */
+}
+/* 名前 */
+#diagnostic-tool .diag-speech-name {
+  font-size: 0.75rem; /* 文字サイズ */
+  text-align: center; /* 中央揃え */
+  line-height: 1.3; /* 行間 */
+}
+
+/* スマホ用調整 */
+@media (max-width: 640px) {
+  #diagnostic-tool .diag-speech-wrap { gap: 0.75rem; } /* 間隔縮小 */
+  #diagnostic-tool .diag-speech-person { width: 60px; } /* 人物幅縮小 */
+  #diagnostic-tool .diag-speech-icon { width: 50px; height: 50px; } /* アイコン縮小 */
+  #diagnostic-tool .diag-speech-bubble { padding: 1rem; font-size: 0.9rem; } /* 吹き出し縮小 */
+  /* しっぽ位置調整 */
+  #diagnostic-tool .diag-speech-bubble::after, 
+  #diagnostic-tool .diag-speech-bubble::before { top: 25px; }
+}
+
+/* ==========================================================================
+   その他ユーティリティ
+   ========================================================================== */
+/* スマホ改行用クラス */
+#diagnostic-tool .br-sp { display: none; } /* PCでは非表示 */
+/* 768px以下 */
+@media (max-width: 768px) { #diagnostic-tool .br-sp { display: inline; } } /* スマホで表示（改行） */
+
+/* ==========================================================================
+   テーブル下注釈 (追加・修正)
+   ========================================================================== */
+#diagnostic-tool .diag-price-note-bottom {
+  text-align: left;      /* 左寄せ */
+  font-size: 0.85rem;    /* 文字サイズ拡大 (0.75rem -> 0.85rem) */
+  margin-top: 5px;       /* ★修正: テーブルとの間隔を5pxにする（アコーディオン準拠） */
+  margin-bottom: 1rem;   /* 下の要素との間隔 */
+  color: #666;           /* グレー文字 */
+  line-height: 1.4;      /* 行間調整 */
+}
